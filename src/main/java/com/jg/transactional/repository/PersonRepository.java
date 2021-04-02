@@ -9,8 +9,6 @@ import java.util.UUID;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, UUID> {
 
-    Person findOneById(final UUID id);
-
     void deleteByFirstName(final String firstName);
 
     Person findByFirstName(final String firstName);

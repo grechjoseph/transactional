@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -42,6 +43,26 @@ public class PersonController {
         personRepository.deleteByFirstName("Joseph");
         log.info("End.");
         return person;
+    }
+
+    /**
+     * Person Entity is a proxy, therefore it is updated even without calling .save() method.
+     */
+    @GetMapping("/test")
+    public List<Person> tryMeToo() {
+        log.info("Starting...");
+        final Person person = new Person();
+        person.setId(UUID.fromString("96a3bab9-65c6-4233-aa31-82213bdc0586"));
+        person.setFirstName("Joseph");
+        person.setLastName("Grech");
+        personRepository.save(person);
+
+        personRepository.findById(person.getId()).ifPresent(p -> {
+            p.setFirstName(UUID.randomUUID().toString());
+        });
+
+        log.info("End.");
+        return personRepository.findAll();
     }
 
     @PostConstruct
